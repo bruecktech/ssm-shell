@@ -2,6 +2,9 @@
 import sys
 import time
 import boto3
+from prompt_toolkit import PromptSession
+
+session = PromptSession()
 
 ssm = boto3.client('ssm')
 
@@ -31,7 +34,7 @@ def ssm_command(command, instance_id):
 #ssm_command('tmux new-session -d -s rbt123', instance_id)
 
 while True:
-    command = input('> ')
+    command = session.prompt('> ')
 
     #invocation = ssm_command('tmux send-keys -t rbt123 "' + command + '" C-m; tmux show-buffer', instance_id)
     invocation = ssm_command(command, instance_id)
@@ -40,4 +43,3 @@ while True:
         print(invocation.get('StandardOutputContent'))
     if invocation.get('StandardErrorContent', '') != '':
         print(invocation.get('StandardErrorContent'))
-
